@@ -6,7 +6,14 @@ from app.models.patient import Patient
 from app.routers.auth import get_current_user
 from services.claude import get_claude_service
 from prompts.form import generate_summary_prompt
+from app.core.cache import get_cache_client
 from pydantic import BaseModel
+from app.logger import get_logger
+
+logger = get_logger("forms_router")
+
+# Test logging on module import
+logger.info("Forms router module loaded")
 
 router = APIRouter(prefix="/forms", tags=["forms"])
 
@@ -59,6 +66,45 @@ class SummaryResponse(BaseModel):
     form_id: int
 
 
+@router.get("/{form_id}/summary", response_model=SummaryResponse)
+async def get_form_summary(
+    form_id: int, 
+    current_user: User = Depends(get_current_user)
+):
+    """Get a cached visit summary"""
+    
+    logger.info(f"Getting cached summary for form_id={form_id}, user={current_user.username}")
+    
+    try:
+        # Get the form to get patient_id
+        form = await Form.find_one({"form_id": form_id})
+        if not form:
+            logger.error(f"Form not found: form_id={form_id}")
+            raise HTTPException(status_code=404, detail="Form not found")
+        
+        # Try to get cached summary
+        cache_client = await get_cache_client()
+        cached_summary = await cache_client.get_summary(
+            current_user.username, 
+            form.patient_id, 
+            form_id
+        )
+        
+        if cached_summary:
+            logger.info(f"Returning cached summary for form_id={form_id}")
+            return SummaryResponse(**cached_summary)
+        else:
+            logger.info(f"No cached summary found for form_id={form_id}")
+            raise HTTPException(status_code=404, detail="No cached summary found")
+            
+    except HTTPException:
+        # Re-raise HTTP exceptions as-is
+        raise
+    except Exception as e:
+        logger.error(f"Unexpected error in get_form_summary: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Error retrieving summary: {str(e)}")
+
+
 @router.post("/{form_id}/summarize", response_model=SummaryResponse)
 async def summarize_form(
     form_id: int, 
@@ -66,35 +112,67 @@ async def summarize_form(
 ):
     """Generate a visit summary using Claude AI based on user type"""
     
-    # Get the form
-    form = await Form.find_one({"form_id": form_id})
-    if not form:
-        raise HTTPException(status_code=404, detail="Form not found")
-    
-    # Get the patient
-    patient = await Patient.find_one({"patient_id": form.patient_id})
-    if not patient:
-        raise HTTPException(status_code=404, detail="Patient not found")
+    logger.info(f"Starting summary generation for form_id={form_id}, user={current_user.username}, user_type={current_user.user_type.value}")
     
     try:
+        # Get the form
+        logger.debug(f"Fetching form with form_id={form_id}")
+        form = await Form.find_one({"form_id": form_id})
+        if not form:
+            logger.error(f"Form not found: form_id={form_id}")
+            raise HTTPException(status_code=404, detail="Form not found")
+        
+        logger.info(f"Found form: form_id={form_id}, patient_id={form.patient_id}, form_type={form.form_type}")
+        
+        # Get the patient
+        logger.debug(f"Fetching patient with patient_id={form.patient_id}")
+        patient = await Patient.find_one({"patient_id": form.patient_id})
+        if not patient:
+            logger.error(f"Patient not found: patient_id={form.patient_id}")
+            raise HTTPException(status_code=404, detail="Patient not found")
+        
+        logger.info(f"Found patient: patient_id={patient.patient_id}, name={patient.name}")
+        
         # Generate the appropriate prompt based on user type
+        logger.debug(f"Generating prompt for user_type={current_user.user_type.value}")
         prompt = generate_summary_prompt(form, patient, current_user.user_type)
+        logger.debug(f"Generated prompt length: {len(prompt)} characters")
         
         # Get Claude service and generate summary
+        logger.debug("Getting Claude service")
         claude_service = get_claude_service()
         
         # Set max tokens based on user type
         max_tokens = 1500 if current_user.user_type.value == "quality_administrator" else 800
+        logger.info(f"Generating summary with max_tokens={max_tokens}")
         
         summary = await claude_service.generate_summary(prompt, max_tokens)
+        logger.info(f"Summary generated successfully, length: {len(summary)} characters")
         
-        return SummaryResponse(
+        # Create response object
+        summary_response = SummaryResponse(
             summary=summary,
             user_type=current_user.user_type.value,
             form_id=form_id
         )
         
+        # Cache the summary
+        logger.debug("Caching generated summary")
+        cache_client = await get_cache_client()
+        await cache_client.set_summary(
+            current_user.username,
+            form.patient_id,
+            form_id,
+            summary_response.dict()
+        )
+        
+        return summary_response
+        
+    except HTTPException:
+        # Re-raise HTTP exceptions as-is
+        raise
     except Exception as e:
+        logger.error(f"Unexpected error in summarize_form: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Error generating summary: {str(e)}")
 
 

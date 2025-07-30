@@ -9,6 +9,7 @@ A web application for viewing patient summary data with role-based access contro
 - **Patient Data**: Protected patient endpoints that return different data based on user type
 - **Patient Forms**: View patient visit forms with question descriptions and answers
 - **Visit Interface**: Blue "Visit" button on patient pages to view detailed form data
+- **AI-Powered Summaries**: Claude AI integration for generating visit summaries based on user type
 - **XML Data Storage**: Full XML patient summaries stored and accessible based on user permissions
 - **Modern UI**: Clean, responsive React frontend with expandable sections
 - **RESTful API**: FastAPI backend with automatic documentation
@@ -109,10 +110,59 @@ The migration script creates patient forms from `form_response_*.json` files:
 - `GET /forms/` - Get forms with optional filtering by patient_id and form_type (requires authentication)
 - `GET /forms/{form_id}` - Get specific form by form_id (requires authentication)
 - `GET /forms/patient/{patient_id}` - Get all forms for a specific patient (requires authentication)
+- `POST /forms/{form_id}/summarize` - Generate AI-powered visit summary (requires authentication)
+
+## AI Integration Setup
+
+The application includes Claude AI integration for generating visit summaries. To enable this feature:
+
+1. **Get an Anthropic API Key:**
+   - Sign up at https://www.anthropic.com/
+   - Generate an API key from your account dashboard
+
+2. **Create `.env.local` file:**
+   ```bash
+   echo "ANTHROPIC_API_KEY=your-api-key-here" > .env.local
+   ```
+
+3. **Restart the application:**
+   ```bash
+   make run
+   ```
+
+**Note**: The application will work without an API key, but will show a placeholder message instead of AI-generated summaries.
+
+### Summary Types
+
+The AI generates different types of summaries based on user type:
+
+- **Field Clinicians**: Quick, mobile-friendly summaries (~400 words) focused on key clinical information needed before patient visits
+- **Quality Administrators**: Detailed, thorough documentation review (~800-1200 words) for insurance claims and compliance
+
+### Summary Format
+
+All summaries are generated in **Markdown format** with appropriate emojis for each section:
+
+**Field Clinician Format:**
+- 🏥 Patient Visit Summary
+- 👤 Demographics & Context
+- 🩺 Clinical Status
+- 💊 Medications
+- 🚶 Functional Status
+- 🎯 Care Needs
+- ⚠️ Alerts & Important Notes
+
+**Quality Administrator Format:**
+- 📋 Documentation Quality Analysis Report
+- 📊 Documentation Completeness Assessment
+- ✅ Clinical Accuracy & Consistency Review
+- 💰 Insurance Claim Readiness
+- 🏛️ Compliance & Regulatory Considerations
+- ⚠️ Risk Factors & Documentation Gaps
+- 🔧 Recommendations for Improvement
+- 📈 Quality Metrics & Scoring
 
 ## Development
-
-### Backend Development
 
 1. **Install Poetry dependencies:**
    ```bash
@@ -186,10 +236,20 @@ make test
 
 ## Environment Variables
 
+Create a `.env.local` file in the root directory with the following variables:
+
+```bash
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+ANTHROPIC_SUMMARY_CACHE_MINUTES=60
+```
+
 ### Backend
 - `MONGODB_URL`: MongoDB connection string (default: `mongodb://localhost:27017`)
 - `DATABASE_NAME`: Database name (default: `patient_dashboard`)
+- `REDIS_URL`: Redis connection string (default: `redis://localhost:6379`)
 - `SECRET_KEY`: JWT secret key (change in production)
+- `ANTHROPIC_API_KEY`: Anthropic Claude API key for AI summaries
+- `ANTHROPIC_SUMMARY_CACHE_MINUTES`: Cache TTL for summaries in minutes (default: 60)
 
 ### Frontend
 - `REACT_APP_API_URL`: Backend API URL (default: `http://localhost:8000`)

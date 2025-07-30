@@ -69,7 +69,11 @@ export const formsAPI = {
     });
     return response.data;
   },
-  summarizeForm: async (formId) => {
+  getFormSummary: async (formId) => { // Get cached summary
+    const response = await api.get(`/forms/${formId}/summary`);
+    return response.data;
+  },
+  summarizeForm: async (formId) => { // Generate new summary
     const response = await api.post(`/forms/${formId}/summarize`);
     return response.data;
   },

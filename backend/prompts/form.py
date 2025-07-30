@@ -2,6 +2,9 @@ from typing import Dict, Any, List
 from app.models.user import UserType
 from app.models.form import Form
 from app.models.patient import Patient
+from app.logger import get_logger
+
+logger = get_logger("prompts")
 
 
 def format_form_data_for_prompt(form: Form, patient: Patient) -> str:
@@ -59,15 +62,29 @@ Your task is to create a concise, mobile-friendly summary of this patient's visi
 
 {form_data}
 
-Please provide a structured summary that includes:
-1. Key patient demographics and visit context
-2. Primary clinical findings and assessments
-3. Current medications and treatments
-4. Functional status and mobility
-5. Care needs and recommendations
-6. Any alerts or important notes
+Please provide a structured summary in MARKDOWN format with appropriate emojis for each section:
 
-Format the response as a clean, scannable summary suitable for quick review before a patient visit."""
+# 🏥 Patient Visit Summary
+
+## 👤 Demographics & Context
+- Include patient name, age, visit date, location, language, support system
+
+## 🩺 Clinical Status
+- Primary diagnosis, vital signs, recent assessments
+
+## 💊 Medications
+- Current medication list with dosages
+
+## 🚶 Functional Status
+- Mobility, ADLs, activity tolerance
+
+## 🎯 Care Needs
+- Monitoring requirements, treatment plan, interventions needed
+
+## ⚠️ Alerts & Important Notes
+- Safety concerns, upcoming appointments, caregiver notes
+
+Format the response as clean markdown with emojis, suitable for quick review before a patient visit."""
 
     return prompt
 
@@ -77,27 +94,93 @@ def generate_quality_administrator_prompt(form: Form, patient: Patient) -> str:
     
     form_data = format_form_data_for_prompt(form, patient)
     
+    # Extract H&P summary data for comparison
+    h_and_p_data = ""
+    if patient.xml_data:
+        # Extract key information from XML data for comparison
+        import re
+        
+        # Extract diagnoses
+        diagnoses_match = re.search(r'<diagnosis>(.*?)</diagnosis>', patient.xml_data, re.DOTALL | re.IGNORECASE)
+        if diagnoses_match:
+            h_and_p_data += f"\nH&P DIAGNOSES:\n{diagnoses_match.group(1).strip()}\n"
+        
+        # Extract medications
+        meds_match = re.search(r'<medications>(.*?)</medications>', patient.xml_data, re.DOTALL | re.IGNORECASE)
+        if meds_match:
+            h_and_p_data += f"\nH&P MEDICATIONS:\n{meds_match.group(1).strip()}\n"
+        
+        # Extract allergies
+        allergies_match = re.search(r'<allergies>(.*?)</allergies>', patient.xml_data, re.DOTALL | re.IGNORECASE)
+        if allergies_match:
+            h_and_p_data += f"\nH&P ALLERGIES:\n{allergies_match.group(1).strip()}\n"
+        
+        # Extract vital signs
+        vitals_match = re.search(r'<vital_signs>(.*?)</vital_signs>', patient.xml_data, re.DOTALL | re.IGNORECASE)
+        if vitals_match:
+            h_and_p_data += f"\nH&P VITAL SIGNS:\n{vitals_match.group(1).strip()}\n"
+    
     prompt = f"""You are a medical AI assistant helping quality administrators review documentation for insurance claims and compliance.
 
-Your task is to create a comprehensive, detailed analysis of this patient's visit documentation. The analysis should be:
+Your task is to create a comprehensive, detailed analysis comparing the patient's H&P summary with their form responses to identify potential discrepancies, documentation gaps, and compliance issues. The analysis should be:
 - Thorough and detailed (800-1200 words)
-- Focused on documentation quality and completeness
-- Identify potential issues for insurance claims
-- Highlight compliance concerns
-- Provide recommendations for documentation improvement
+- Focused on comparing H&P data with form responses
+- Identify missing or inconsistent information
+- Highlight potential insurance claim issues
+- Flag compliance concerns and documentation gaps
+- Provide specific recommendations for improvement
 
+H&P SUMMARY DATA:
+{h_and_p_data}
+
+FORM RESPONSE DATA:
 {form_data}
 
-Please provide a structured analysis that includes:
-1. Documentation completeness assessment
-2. Clinical accuracy and consistency review
-3. Insurance claim readiness evaluation
-4. Compliance and regulatory considerations
-5. Risk factors and documentation gaps
-6. Specific recommendations for improvement
-7. Quality metrics and scoring
+Please provide a structured analysis in MARKDOWN format with appropriate emojis for each section:
 
-Format the response as a detailed report suitable for quality assurance review."""
+# 📋 Documentation Compliance Review Report
+
+## 🔍 H&P vs Form Response Comparison
+- Key diagnoses from H&P and their presence/absence in form responses
+- Medication reconciliation between H&P and form data
+- Vital signs consistency and documentation
+- Allergy information completeness
+
+## ⚠️ Critical Discrepancies & Missing Information
+- Diagnoses mentioned in H&P but not addressed in forms
+- Medications listed in H&P but not documented in responses
+- Missing allergy documentation
+- Inconsistent vital signs or assessment data
+
+## 💰 Insurance Claim Risk Assessment
+- Documentation gaps that could impact claim approval
+- Missing supporting documentation for diagnoses
+- Incomplete medication reconciliation
+- Insufficient clinical justification for interventions
+
+## 🏛️ Compliance & Regulatory Issues
+- HIPAA compliance concerns
+- Documentation standards violations
+- Missing required assessments
+- Incomplete care coordination documentation
+
+## 📊 Documentation Quality Score
+- Overall completeness score (0-100%)
+- Critical gaps identification
+- Documentation accuracy assessment
+
+## 🔧 Specific Recommendations
+- Immediate documentation corrections needed
+- Missing assessments to be completed
+- Follow-up actions required
+- System improvements for better compliance
+
+## 🎯 Priority Action Items
+- High priority: Critical missing information
+- Medium priority: Documentation improvements
+- Low priority: Minor formatting or consistency issues
+
+Format the response as detailed markdown with emojis, suitable for quality assurance review. Focus on actionable insights that help ensure proper documentation for insurance claims."""
 
     return prompt
 
@@ -105,10 +188,15 @@ Format the response as a detailed report suitable for quality assurance review."
 def generate_summary_prompt(form: Form, patient: Patient, user_type: UserType) -> str:
     """Generate appropriate prompt based on user type"""
     
-    if user_type == UserType.field_clinician:
+    logger.info(f"Generating prompt for user_type={user_type.value}, form_type={form.form_type}, patient={patient.name}")
+    
+    if user_type.value == "field_clinician":
+        logger.debug("Using field clinician prompt")
         return generate_field_clinician_prompt(form, patient)
-    elif user_type == UserType.quality_administrator:
+    elif user_type.value == "quality_administrator":
+        logger.debug("Using quality administrator prompt")
         return generate_quality_administrator_prompt(form, patient)
     else:
         # Default to field clinician prompt for unknown user types
+        logger.warning(f"Unknown user_type={user_type.value}, defaulting to field clinician prompt")
         return generate_field_clinician_prompt(form, patient) 

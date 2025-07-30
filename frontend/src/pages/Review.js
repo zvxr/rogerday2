@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { patientsAPI, formsAPI } from '../services/api';
 import ReactMarkdown from 'react-markdown';
-import './Visit.css';
+import './Review.css';
 
-const Visit = () => {
+const Review = () => {
   const { patientId } = useParams();
   const navigate = useNavigate();
   const [patient, setPatient] = useState(null);
@@ -26,14 +26,14 @@ const Visit = () => {
         setPatient(patientData);
         setForms(formsData);
         
-                        // Load summary for the most recent form (cached or generate)
-                if (formsData.length > 0) {
-                  const mostRecentForm = formsData[0]; // Assuming forms are ordered by date
-                  loadSummary(mostRecentForm.form_id);
-                }
+        // Load summary for the most recent form (cached or generate)
+        if (formsData.length > 0) {
+          const mostRecentForm = formsData[0];
+          loadSummary(mostRecentForm.form_id);
+        }
       } catch (err) {
-        setError('Failed to load visit data');
-        console.error('Error fetching visit data:', err);
+        setError('Failed to load review data');
+        console.error('Error fetching review data:', err);
       } finally {
         setLoading(false);
       }
@@ -99,71 +99,69 @@ const Visit = () => {
       const summaryData = await formsAPI.summarizeForm(formId);
       setSummary(summaryData);
     } catch (err) {
-      setSummaryError('Failed to generate summary. Please try again.');
-      console.error('Error generating summary:', err);
+      setSummaryError('Failed to generate review summary. Please try again.');
+      console.error('Error generating review summary:', err);
     } finally {
       setSummaryLoading(false);
     }
   };
 
-  const loadSummary = async (formId) => { // New function to load cached or generate summary
+  const loadSummary = async (formId) => {
     try {
       setSummaryLoading(true);
       setSummaryError(null);
       
       // First try to get cached summary
       try {
-        console.log(`Attempting to load cached summary for form ${formId}...`);
+        console.log(`Attempting to load cached review summary for form ${formId}...`);
         const cachedSummary = await formsAPI.getFormSummary(formId);
         setSummary(cachedSummary);
-        console.log('✅ Cache HIT: Using cached summary');
-        return; // Exit early if we got cached data
+        console.log('✅ Cache HIT: Using cached review summary');
+        return;
       } catch (cacheError) {
-        // If no cached summary (404), generate a new one
         if (cacheError.response && cacheError.response.status === 404) {
-          console.log('❌ Cache MISS: No cached summary found, generating new one...');
+          console.log('❌ Cache MISS: No cached review summary found, generating new one...');
           const summaryData = await formsAPI.summarizeForm(formId);
           setSummary(summaryData);
-          console.log('✅ Generated and cached new summary');
+          console.log('✅ Generated and cached new review summary');
         } else {
-          // If it's not a 404, it's a real error
-          console.error('❌ Error loading cached summary:', cacheError);
+          console.error('❌ Error loading cached review summary:', cacheError);
           throw cacheError;
         }
       }
     } catch (err) {
-      setSummaryError('Failed to load summary. Please try again.');
-      console.error('Error loading summary:', err);
+      setSummaryError('Failed to load review summary. Please try again.');
+      console.error('Error loading review summary:', err);
     } finally {
       setSummaryLoading(false);
     }
   };
 
-  const refreshSummary = async () => { // New function to force refresh summary
+  const refreshSummary = async () => {
     if (forms.length > 0) {
       const mostRecentForm = forms[0];
-      console.log('🔄 Force refreshing summary...');
+      console.log('🔄 Force refreshing review summary...');
       await generateSummary(mostRecentForm.form_id);
-      console.log('✅ Summary refreshed and cached');
+      console.log('✅ Review summary refreshed and cached');
     }
   };
 
   if (loading) {
-    return <div className="visit-container">Loading visit data...</div>;
+    return <div className="review-container">Loading review data...</div>;
   }
 
   if (error) {
-    return <div className="visit-container error">{error}</div>;
+    return <div className="review-container error">{error}</div>;
   }
 
   if (!patient) {
-    return <div className="visit-container error">Patient not found</div>;
+    return <div className="review-container error">Patient not found</div>;
   }
 
   return (
-    <div className="visit-container">
-      <div className="visit-header">
-        <h1>Visit Details</h1>
+    <div className="review-container">
+      <div className="review-header">
+        <h1>Documentation Review</h1>
         <div className="header-buttons">
           <button className="refresh-button" onClick={refreshSummary} disabled={summaryLoading}>
             🔄 Refresh
@@ -174,14 +172,14 @@ const Visit = () => {
         </div>
       </div>
       
-      {/* Visit Summary Section */}
+      {/* Documentation Review Summary Section */}
       <details className="summary-section" open>
-        <summary>Visit Summary</summary>
+        <summary>Documentation Review Summary</summary>
         <div className="summary-content">
           {summaryLoading && (
             <div className="summary-loading">
               <div className="spinner"></div>
-              <p>Summarizing visit data...</p>
+              <p>Analyzing documentation for compliance...</p>
             </div>
           )}
           {summaryError && (
@@ -192,7 +190,7 @@ const Visit = () => {
           {summary && !summaryLoading && (
             <div className="summary-text">
               <div className="summary-header">
-                <span className="summary-type">{getFormTypeDisplayName(summary.user_type)}</span>
+                <span className="summary-type">Quality Administrator Review</span>
                 <span className="summary-form-id">Form ID: {summary.form_id}</span>
               </div>
               <div className="summary-body">
@@ -234,14 +232,10 @@ const Visit = () => {
               </summary>
               <div className="form-details">
                 <div className="questions-grid">
-                  <div className="grid-header">
-                    <div className="question-header">Question</div>
-                    <div className="answer-header">Answer</div>
-                  </div>
-                  {getAnsweredQuestions(form.survey_data).map((item, index) => (
-                    <div key={index} className="question-row">
-                      <div className="question">{item.question}</div>
-                      <div className="answer">{String(item.answer)}</div>
+                  {getAnsweredQuestions(form.survey_data).map((q, index) => (
+                    <div key={index} className="question-item">
+                      <div className="question"><strong>Question:</strong> {q.question}</div>
+                      <div className="answer"><strong>Answer:</strong> {q.answer}</div>
                     </div>
                   ))}
                 </div>
@@ -254,4 +248,4 @@ const Visit = () => {
   );
 };
 
-export default Visit; 
+export default Review; 

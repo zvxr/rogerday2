@@ -22,9 +22,13 @@ services:
       - "8000:8000"
     depends_on:
       - mongodb
+      - redis
     environment:
       - MONGODB_URL=mongodb://mongodb:27017
       - DATABASE_NAME=patient_dashboard
+      - REDIS_URL=redis://redis:6379
+    env_file:
+      - .env.local
     networks:
       - patient-dashboard-network
     volumes:
@@ -45,8 +49,19 @@ services:
     networks:
       - patient-dashboard-network
 
+  redis:
+    image: redis:7-alpine
+    container_name: patient-dashboard-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - patient-dashboard-network
+
 volumes:
   mongodb_data:
+  redis_data:
 
 networks:
   patient-dashboard-network:

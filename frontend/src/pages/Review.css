@@ -1,19 +1,20 @@
-.visit-container {
+.review-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-.visit-header {
+.review-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  border-bottom: 2px solid #007bff;
+  border-bottom: 2px solid #dc3545;
   padding-bottom: 10px;
 }
 
-.visit-header h1 {
+.review-header h1 {
   color: #333;
   margin: 0;
 }
@@ -25,7 +26,7 @@
 }
 
 .refresh-button {
-  background-color: #6f42c1;
+  background-color: #dc3545;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -40,7 +41,7 @@
 }
 
 .refresh-button:hover:not(:disabled) {
-  background-color: #5a32a3;
+  background-color: #c82333;
 }
 
 .refresh-button:disabled {
@@ -67,7 +68,7 @@
   background-color: #545b62;
 }
 
-/* Summary Section */
+/* Documentation Review Summary Section */
 .summary-section {
   background: #f8f9fa;
   border: 1px solid #dee2e6;
@@ -76,7 +77,7 @@
 }
 
 .summary-section summary {
-  background: #6f42c1;
+  background: #dc3545;
   color: white;
   padding: 15px 20px;
   cursor: pointer;
@@ -86,7 +87,7 @@
 }
 
 .summary-section summary:hover {
-  background: #5a32a3;
+  background: #c82333;
 }
 
 .summary-content {
@@ -97,18 +98,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
-  color: #6c757d;
+  gap: 10px;
+  color: #666;
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #6f42c1;
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #dc3545;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 15px;
 }
 
 @keyframes spin {
@@ -118,18 +118,18 @@
 
 .summary-error {
   color: #dc3545;
-  text-align: center;
-  padding: 20px;
   background: #f8d7da;
   border: 1px solid #f5c6cb;
   border-radius: 4px;
+  padding: 10px;
+  margin: 10px 0;
 }
 
 .summary-text {
   background: white;
   border-radius: 6px;
   padding: 20px;
-  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .summary-header {
@@ -138,95 +138,46 @@
   align-items: center;
   margin-bottom: 15px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #6f42c1;
+  border-bottom: 1px solid #eee;
 }
 
 .summary-type {
   font-weight: 600;
-  color: #6f42c1;
-  font-size: 1.1em;
+  color: #dc3545;
 }
 
 .summary-form-id {
-  color: #6c757d;
-  font-size: 0.9em;
+  color: #666;
+  font-size: 14px;
 }
 
 .summary-body {
   line-height: 1.6;
-  color: #212529;
+}
+
+.summary-body h1,
+.summary-body h2,
+.summary-body h3 {
+  color: #333;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .summary-body p {
-  margin-bottom: 12px;
-}
-
-.summary-body p:last-child {
-  margin-bottom: 0;
-}
-
-/* Markdown Styling */
-.summary-body h1 {
-  color: #6f42c1;
-  font-size: 1.8em;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #6f42c1;
-  padding-bottom: 10px;
-}
-
-.summary-body h2 {
-  color: #495057;
-  font-size: 1.4em;
-  margin-top: 25px;
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.summary-body h3 {
-  color: #6c757d;
-  font-size: 1.2em;
-  margin-top: 20px;
   margin-bottom: 10px;
-  font-weight: 600;
 }
 
-.summary-body ul {
-  margin-left: 20px;
-  margin-bottom: 15px;
+.summary-body ul,
+.summary-body ol {
+  margin-bottom: 10px;
+  padding-left: 20px;
 }
 
 .summary-body li {
-  margin-bottom: 8px;
-  line-height: 1.5;
+  margin-bottom: 5px;
 }
 
-.summary-body strong {
-  color: #495057;
-  font-weight: 600;
-}
-
-.summary-body em {
-  color: #6c757d;
-  font-style: italic;
-}
-
-.summary-body code {
-  background-color: #f8f9fa;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9em;
-}
-
-.summary-body blockquote {
-  border-left: 4px solid #6f42c1;
-  padding-left: 15px;
-  margin-left: 0;
-  color: #6c757d;
-  font-style: italic;
-}
-
-/* Patient Section */
+/* Patient Information Section */
 .patient-section {
   background: #f8f9fa;
   border: 1px solid #dee2e6;
@@ -291,26 +242,26 @@
   padding: 20px;
 }
 
-/* Individual Form Items */
 .form-item {
   background: white;
   border: 1px solid #dee2e6;
-  border-radius: 8px;
+  border-radius: 6px;
   margin-bottom: 15px;
   overflow: hidden;
 }
 
 .form-item summary {
-  background: #6c757d;
-  color: white;
-  padding: 12px 20px;
+  background: #f8f9fa;
+  color: #333;
+  padding: 15px 20px;
   cursor: pointer;
   font-weight: 500;
+  border-radius: 0;
   transition: background-color 0.2s;
 }
 
 .form-item summary:hover {
-  background: #545b62;
+  background: #e9ecef;
 }
 
 .form-summary {
@@ -323,100 +274,73 @@
 
 .form-type {
   font-weight: 600;
-  color: #fff;
+  color: #007bff;
 }
 
 .form-date {
-  color: #e9ecef;
-  font-size: 0.9em;
+  color: #666;
+  font-size: 14px;
 }
 
 .form-count {
-  background: rgba(255, 255, 255, 0.2);
+  background: #28a745;
+  color: white;
   padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.85em;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .form-details {
   padding: 20px;
+  border-top: 1px solid #dee2e6;
 }
 
-/* Questions Grid */
 .questions-grid {
-  border: 1px solid #dee2e6;
+  display: grid;
+  gap: 15px;
+}
+
+.question-item {
+  background: #f8f9fa;
+  padding: 15px;
   border-radius: 6px;
-  overflow: hidden;
-}
-
-.grid-header {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  background: #f8f9fa;
-  border-bottom: 2px solid #dee2e6;
-  font-weight: 600;
-  color: #495057;
-}
-
-.question-header,
-.answer-header {
-  padding: 12px 15px;
-  border-right: 1px solid #dee2e6;
-}
-
-.answer-header {
-  border-right: none;
-}
-
-.question-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  border-bottom: 1px solid #dee2e6;
-  transition: background-color 0.1s;
-}
-
-.question-row:hover {
-  background: #f8f9fa;
-}
-
-.question-row:last-child {
-  border-bottom: none;
-}
-
-.question,
-.answer {
-  padding: 12px 15px;
-  border-right: 1px solid #dee2e6;
-  word-wrap: break-word;
-}
-
-.answer {
-  border-right: none;
-  font-weight: 500;
-  color: #495057;
+  border-left: 4px solid #007bff;
 }
 
 .question {
-  color: #212529;
-  line-height: 1.4;
+  margin-bottom: 8px;
+  color: #333;
 }
 
-/* Loading and Error States */
-.visit-container.error {
+.answer {
+  color: #666;
+  font-style: italic;
+}
+
+/* Error states */
+.review-container.error {
   color: #dc3545;
   text-align: center;
   padding: 40px;
-  font-size: 1.1em;
+  font-size: 18px;
 }
 
-/* Responsive Design */
+/* Responsive design */
 @media (max-width: 768px) {
-  .visit-container {
+  .review-container {
     padding: 10px;
   }
   
-  .patient-grid {
-    grid-template-columns: 1fr;
+  .review-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .header-buttons {
+    width: 100%;
+    justify-content: space-between;
   }
   
   .form-summary {
@@ -424,12 +348,7 @@
     align-items: flex-start;
   }
   
-  .questions-grid {
-    font-size: 0.9em;
-  }
-  
-  .question,
-  .answer {
-    padding: 8px 10px;
+  .patient-grid {
+    grid-template-columns: 1fr;
   }
 } 

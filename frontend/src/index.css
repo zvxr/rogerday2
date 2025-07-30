@@ -161,6 +161,23 @@ code {
   text-decoration: none;
 }
 
+.review-button {
+  background-color: #dc3545;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.review-button:hover {
+  background-color: #c82333;
+  color: white;
+  text-decoration: none;
+}
+
 .patient-details {
   padding: 15px;
 }

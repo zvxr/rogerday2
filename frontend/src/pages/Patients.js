@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { patientsAPI } from '../services/api';
+import { patientsAPI, authAPI } from '../services/api';
 import Navbar from '../components/Navbar';
 
 const Patients = () => {
   const [patients, setPatients] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchPatients = async () => {
+    const fetchData = async () => {
       try {
-        const data = await patientsAPI.getPatients();
-        setPatients(data);
+        const [patientsData, userData] = await Promise.all([
+          patientsAPI.getPatients(),
+          authAPI.getCurrentUser()
+        ]);
+        
+        setPatients(patientsData);
+        setUserInfo(userData);
       } catch (err) {
-        setError('Failed to load patients. Please try again.');
+        setError('Failed to load data. Please try again.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPatients();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -57,10 +63,14 @@ const Patients = () => {
                       <div className="patient-header">
                         <h3>{patient.name}</h3>
                         <Link 
-                          to={`/visit/${patient.patient_id}`} 
-                          className="visit-button"
+                          to={userInfo?.user_type === 'quality_administrator' 
+                            ? `/review/${patient.patient_id}` 
+                            : `/visit/${patient.patient_id}`} 
+                          className={userInfo?.user_type === 'quality_administrator' 
+                            ? 'review-button' 
+                            : 'visit-button'}
                         >
-                          Visit
+                          {userInfo?.user_type === 'quality_administrator' ? 'Review' : 'Visit'}
                         </Link>
                       </div>
                     </summary>

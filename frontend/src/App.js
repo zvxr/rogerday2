@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Patients from './pages/Patients';
 import Settings from './pages/Settings';
 import Visit from './pages/Visit';
+import Review from './pages/Review';
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -47,6 +48,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Visit />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/review/:patientId" 
+            element={
+              <ProtectedRoute>
+                <Review />
               </ProtectedRoute>
             } 
           />
