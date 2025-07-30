@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: patient-dashboard-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=patient_dashboard
+    networks:
+      - patient-dashboard-network
+
+  api:
+    build:
+      context: .
+      dockerfile: infrastructure/Dockerfile.backend
+    container_name: patient-dashboard-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+      - redis
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017
+      - DATABASE_NAME=patient_dashboard
+      - REDIS_URL=redis://redis:6379
+    env_file:
+      - .env.local
+    networks:
+      - patient-dashboard-network
+    volumes:
+      - ./scripts:/app/scripts:ro
+      - ./assets:/app/assets:ro
+
+  ui:
+    build:
+      context: .
+      dockerfile: infrastructure/Dockerfile.frontend
+    container_name: patient-dashboard-ui
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+    networks:
+      - patient-dashboard-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: patient-dashboard-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - patient-dashboard-network
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+networks:
+  patient-dashboard-network:
+    driver: bridge 

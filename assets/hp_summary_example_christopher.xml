@@ -1,0 +1,179 @@
+<patient_demographics>
+THIS IS AI GENERATED.
+- Name: Christopher C Dowd
+- Date of Birth: 12/28/1970 (54 years old)
+- Gender: Male
+- Race: White/Caucasian-NON-HISPANIC
+- Religion: NO RELIGIOUS PREFERENCE
+- Marital Status: Married
+</patient_demographics>
+
+<patient_contact_information>
+- Home Address: 2670 MIRA VISTA DR, RICHMOND, CA 94805
+- Phone Numbers:
+  * Home/Mobile (preferred): (415) 889-9426
+  * Work: (415) 473-7456
+- Home Situation: Single-story home with 2 steps to enter
+- Employment: Works as library technician at Marin County Free Library (full-time)
+</patient_contact_information>
+
+<emergency_contact>
+1. Primary Contact:
+- Name: FIONA O'SHEA (Wife)
+- Address: 2670 Mira Vista Dr, Richmond, CA 94805
+- Phone: (510) 374-6286
+
+2. Secondary Contact:
+- Name: OSCAR DOWD (Son)
+- Address: 2670 Mira Vista Dr, Richmond, CA 94805
+- Phone: (510) 374-6286
+</emergency_contact>
+
+<ssn_number>
+228-08-5521
+</ssn_number>
+
+<insurance_details>
+Plan Number: NPL515W12594
+Group Number: 280558M017
+</insurance_details>
+
+<payment_source>
+Primary Financial Class: COMM (Commercial)
+Plan Description: BLUE CROSS PPO POS EPO
+Plan Provider Contact: (800) 677-6669
+</payment_source>
+
+<inpatient_facility>
+Facility: ABSMC - Summit Merritt Pavilion
+Admission Date: 5/25/2025 12:34 PM (PT)
+Projected Discharge Date: 5/31/2025
+Patient Type: INPATIENT ACUTE
+Service Type: REHABILITATION-IP ACUTE
+Location: MP PCU 04 REH / 4763-A
+Admit Source: PHYSICIAN / SELF REFERRAL
+</inpatient_facility>
+
+<diagnoses>
+Primary Diagnoses (with dates when available):
+- STEMI (ST elevation myocardial infarction) (4/23/2025)
+- CAD with delayed presenting STEMI
+- Post MI cardiac papillary muscle rupture with severe MR
+- S/p bioprosthetic MVR, LAAL, and septostomy path closure (4/28/2025)
+- Cardiogenic shock
+- S/p PCI of occluded RCA and left CFX (4/23/2025)
+- HFrEF (heart failure with reduced ejection fraction) EF 25-30%
+- Acute blood loss anemia
+- Acute kidney injury/ATN (started HD 4/26/2025)
+- Left peroneal vein nonocclusive DVT (diagnosed 5/13/2025)
+- Lower GI bleed with large ulcers in cecum and ascending colon
+</diagnoses>
+
+<medical_history>
+Past Medical History:
+- Hyperlipidemia
+- Benign neoplasm of transverse colon
+- Benign neoplasm of rectum
+- Family history of malignant neoplasm of digestive organ
+- Ventricular tachycardia
+- Multiple colon polyps
+- Gastritis
+- Duodenitis
+
+Surgical History:
+- Vasectomy (2011)
+- Cardiac catheterization with PCI (4/23/2025)
+- IABP insertion
+- MVR surgery (4/28/2025)
+- S/p ECMO (decannulated 4/24/2025)
+- S/p Impella (explanted 5/2/2025)
+</medical_history>
+
+<intensive_care_therapies>
+Current/Recent Interventions:
+- S/p ECMO therapy (decannulated 4/24/2025)
+- S/p Impella device (explanted 5/2/2025)
+- Hemodialysis (started 4/26/2025, last session 5/19/2025)
+- LifeVest (currently in use)
+- Physical Therapy: 300+ft SPV to mod I with 4WW
+- Occupational Therapy: Mod I for most ADLs
+- Speech Therapy
+- Cardiac rehabilitation program
+</intensive_care_therapies>
+
+<allergies>
+- Nickel (Reaction: Rash, Unspecified)
+- Shellfish Allergy (Not anaphylactic reaction per patient)
+</allergies>
+
+<risk_factors>
+- Recent STEMI and cardiac surgery
+- History of falls
+- Severely reduced cardiac function (EF 25-30%)
+- Recent GI bleeding
+- DVT
+- Multiple medications
+- Smoking history (admitted to smoking leading up to admission, motivated to quit)
+- Rare alcohol use (approximately 10 times per year)
+- Mobility limitations requiring assistive devices
+</risk_factors>
+
+<cultural>
+Primary Language: English
+Source of emotional support: Lives with wife and children
+</cultural>
+
+<medications>
+Current High-Risk Medications:
+- ASA/Plavix DAPT (dual antiplatelet therapy)
+- Warfarin (discontinued 5/25/2025)
+- Spironolactone 12.5mg Daily
+- Pantoprazole 40mg daily
+- Atorvastatin 40mg
+- Jardiance 10mg (held)
+- Losartan 12.5mg (held)
+- HYDROcodone/acetaminophen (NORCO)
+</medications>
+
+<prior_functioning>
+Prior to admission:
+- Independent in ADLs
+- Working full-time as library technician
+- Able to drive
+- Living independently with family
+</prior_functioning>
+
+<prior_device_use>
+Current devices:
+- LifeVest
+- 4-wheeled walker (4WW)
+- Previously had:
+  * ECMO (removed 4/24/2025)
+  * Impella device (removed 5/2/2025)
+  * Tunneled CVC for hemodialysis (removed)
+</prior_device_use>
+
+<homebound_reason>
+Patient requires assistance with mobility and ADLs due to cardiac debility following STEMI, cardiac surgery, and complications. Currently using 4WW for ambulation and requires supervision/assistance for safety.
+</homebound_reason>
+
+<advanced_directives>
+Code Status: FULL
+</advanced_directives>
+
+<endocrine>
+No significant endocrine conditions noted in records.
+</endocrine>
+
+<skin_condition>
+No pressure ulcers noted
+Braden Scale: 20
+</skin_condition>
+
+<health_screenings>
+No specific health screening information provided in the records.
+</health_screenings>
+
+<recent_immunizations>
+No immunization information provided in the records.
+</recent_immunizations>
