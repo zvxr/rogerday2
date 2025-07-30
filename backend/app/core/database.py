@@ -2,6 +2,9 @@ from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.core.config import settings
 from app.models.user import User
+from app.models.patient import Patient
+from app.models.question import Question
+from app.models.form import Form
 
 
 async def init_db():
@@ -9,7 +12,7 @@ async def init_db():
     client = AsyncIOMotorClient(settings.mongodb_url)
     await init_beanie(
         database=client[settings.database_name],
-        document_models=[User]
+        document_models=[User, Patient, Question, Form]
     )
 
 

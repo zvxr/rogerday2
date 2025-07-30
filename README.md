@@ -7,7 +7,10 @@ A web application for viewing patient summary data with role-based access contro
 - **Authentication**: JWT-based login system with username/password
 - **Role-based Access**: Different user types with different data access levels
 - **Patient Data**: Protected patient endpoints that return different data based on user type
-- **Modern UI**: Clean, responsive React frontend
+- **Patient Forms**: View patient visit forms with question descriptions and answers
+- **Visit Interface**: Blue "Visit" button on patient pages to view detailed form data
+- **XML Data Storage**: Full XML patient summaries stored and accessible based on user permissions
+- **Modern UI**: Clean, responsive React frontend with expandable sections
 - **RESTful API**: FastAPI backend with automatic documentation
 
 ## User Types
@@ -61,6 +64,36 @@ The migration script creates two default users:
 - **Username**: `Bob`, **Password**: `test`, **Type**: Field Clinician
 - **Username**: `Alice`, **Password**: `test`, **Type**: Quality Administrator
 
+## Sample Patients
+
+The migration script creates two sample patients from XML files:
+
+- **Christopher C Dowd** (ID: 1) - Male, DOB: 12/28/1970
+- **Constance E. Bratcher** (ID: 2) - Female, goes by "Connie"
+
+## Question Schema
+
+The migration script creates question schema data from `question_schema.json`:
+
+- **Visit Types**: SOC, RN, DC, PTEVAL, PTVIS
+- **Categories**: Patient_Tracking, Administrative, Vitals, Patient_History_and_Prognosis, etc.
+- **Questions**: 913 total questions with qid (primary key), description, casting, and optional subitems
+- **Sample Questions**:
+  - `r_provided_cfc12d` - "Location of care provided" (SOC/Patient_Tracking)
+  - `t_limit_dcf1c7` - "Patient's last name" (SOC/Patient_Tracking)
+  - `t_limit_c33e28` - "Patient's first name" (SOC/Patient_Tracking)
+
+## Patient Forms
+
+The migration script creates patient forms from `form_response_*.json` files:
+
+- **Form Types**: SOC, RN, DC, PTEVAL, PTVIS (matching question schema)
+- **Structure**: Each form includes patient_id, form_date, form_type, and survey_data
+- **Survey Data**: Enhanced with question descriptions from the question schema
+- **Sample Forms**:
+  - Christopher's SOC form (Patient ID: 1)
+  - Connie's PTEVAL form (Patient ID: 2)
+
 ## API Endpoints
 
 ### Public Endpoints
@@ -69,6 +102,13 @@ The migration script creates two default users:
 
 ### Protected Endpoints
 - `GET /patients` - Get patient data (requires authentication)
+- `GET /patients/{patient_id}` - Get specific patient by ID (requires authentication)
+- `GET /auth/me` - Get current user information (requires authentication)
+- `GET /questions/{qid}` - Get specific question by qid (requires authentication)
+- `GET /questions/` - Get questions with optional filtering by visit_type and category (requires authentication)
+- `GET /forms/` - Get forms with optional filtering by patient_id and form_type (requires authentication)
+- `GET /forms/{form_id}` - Get specific form by form_id (requires authentication)
+- `GET /forms/patient/{patient_id}` - Get all forms for a specific patient (requires authentication)
 
 ## Development
 

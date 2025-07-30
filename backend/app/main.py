@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import init_db, close_db
-from app.routers import auth, patients, status
+from app.routers import auth, patients, status, questions, forms
 
 app = FastAPI(
     title="Patient Dashboard API",
@@ -23,6 +23,8 @@ app.add_middleware(
 app.include_router(status.router)
 app.include_router(auth.router)
 app.include_router(patients.router)
+app.include_router(questions.router)
+app.include_router(forms.router)
 
 
 @app.on_event("startup")

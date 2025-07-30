@@ -35,11 +35,42 @@ export const authAPI = {
     const response = await api.post('/auth/login', { username, password });
     return response.data;
   },
+  getCurrentUser: async () => {
+    const response = await api.get('/auth/me');
+    return response.data;
+  },
 };
 
 export const patientsAPI = {
   getPatients: async () => {
     const response = await api.get('/patients');
+    return response.data;
+  },
+  getPatient: async (id) => {
+    const response = await api.get(`/patients/${id}`);
+    return response.data;
+  },
+};
+
+export const formsAPI = {
+  getForms: async (params = {}) => {
+    const response = await api.get('/forms/', { params });
+    return response.data;
+  },
+  getForm: async (id, excludeNull = true) => {
+    const response = await api.get(`/forms/${id}`, { 
+      params: { exclude_null: excludeNull } 
+    });
+    return response.data;
+  },
+  getFormsByPatient: async (patientId, excludeNull = true) => {
+    const response = await api.get(`/forms/patient/${patientId}`, { 
+      params: { exclude_null: excludeNull } 
+    });
+    return response.data;
+  },
+  summarizeForm: async (formId) => {
+    const response = await api.post(`/forms/${formId}/summarize`);
     return response.data;
   },
 };

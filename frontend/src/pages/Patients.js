@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { patientsAPI } from '../services/api';
 import Navbar from '../components/Navbar';
 
@@ -50,9 +51,43 @@ const Patients = () => {
               <p>No patients found.</p>
             ) : (
               patients.map((patient) => (
-                <div key={patient.id} className="patient-item">
-                  <h3>Patient ID: {patient.id}</h3>
-                  <p><strong>Name:</strong> {patient.name}</p>
+                <div key={patient.patient_id} className="patient-item">
+                  <details>
+                    <summary className="patient-summary">
+                      <div className="patient-header">
+                        <h3>{patient.name}</h3>
+                        <Link 
+                          to={`/visit/${patient.patient_id}`} 
+                          className="visit-button"
+                        >
+                          Visit
+                        </Link>
+                      </div>
+                    </summary>
+                    <div className="patient-details">
+                      <p><strong>Patient ID:</strong> {patient.patient_id}</p>
+                      <p><strong>Date of Birth:</strong> {patient.dob ? new Date(patient.dob).toLocaleDateString() : 'Not available'}</p>
+                      <p><strong>Gender:</strong> {patient.gender}</p>
+                      <p><strong>MRN:</strong> {patient.mrn}</p>
+                      <p><strong>Address:</strong> {patient.address}</p>
+                      <p><strong>Phone:</strong> {patient.phone}</p>
+                      <p><strong>Email:</strong> {patient.email}</p>
+                      {patient.xml_data && (
+                        <details>
+                          <summary>View XML Data</summary>
+                          <pre style={{ 
+                            background: '#f5f5f5', 
+                            padding: '10px', 
+                            overflow: 'auto', 
+                            maxHeight: '200px',
+                            fontSize: '12px'
+                          }}>
+                            {patient.xml_data}
+                          </pre>
+                        </details>
+                      )}
+                    </div>
+                  </details>
                 </div>
               ))
             )}

@@ -4,6 +4,8 @@ import { isAuthenticated } from './utils/auth';
 import LoginForm from './components/LoginForm';
 import Dashboard from './pages/Dashboard';
 import Patients from './pages/Patients';
+import Settings from './pages/Settings';
+import Visit from './pages/Visit';
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -29,6 +31,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Patients />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/settings" 
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/visit/:patientId" 
+            element={
+              <ProtectedRoute>
+                <Visit />
               </ProtectedRoute>
             } 
           />

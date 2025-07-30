@@ -15,6 +15,7 @@ const Navbar = () => {
       <div className="container">
         <Link to="/dashboard">Patient Dashboard</Link>
         <Link to="/patients">Patients</Link>
+        <Link to="/settings">Settings</Link>
         <button onClick={handleLogout} style={{ 
           background: 'none', 
           border: 'none', 

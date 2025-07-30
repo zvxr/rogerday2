@@ -11,8 +11,11 @@ run:
 	docker-compose up -d
 	@echo "Waiting for services to be ready..."
 	@sleep 10
-	@echo "Running database migration..."
+	@echo "Running database migrations..."
 	docker-compose exec api python scripts/migrate_users.py
+	docker-compose exec api python scripts/migrate_patients.py
+	docker-compose exec api python scripts/migrate_questions_schema.py
+	docker-compose exec api python scripts/migrate_forms.py
 	@echo "Patient Dashboard is running!"
 	@echo "Frontend: http://localhost:3000"
 	@echo "Backend API: http://localhost:8000"
@@ -34,10 +37,13 @@ test:
 	@echo "Running frontend tests..."
 	cd frontend && npm test -- --watchAll=false
 
-# Run database migration
+# Run database migrations
 migrate:
-	@echo "Running database migration..."
+	@echo "Running database migrations..."
 	docker-compose exec api python scripts/migrate_users.py
+	docker-compose exec api python scripts/migrate_patients.py
+	docker-compose exec api python scripts/migrate_questions_schema.py
+	docker-compose exec api python scripts/migrate_forms.py
 
 # Show logs
 logs:

@@ -29,6 +29,7 @@ services:
       - patient-dashboard-network
     volumes:
       - ./scripts:/app/scripts:ro
+      - ./assets:/app/assets:ro
 
   ui:
     build:

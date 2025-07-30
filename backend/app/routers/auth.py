@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.core.security import verify_password, create_access_token, verify_token
 from app.core.config import settings
-from app.models.user import User, UserLogin, Token, TokenData
+from app.models.user import User, UserLogin, Token, TokenData, UserResponse
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 security = HTTPBearer()
@@ -56,4 +56,14 @@ async def login(user_credentials: UserLogin):
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     
-    return {"access_token": access_token, "token_type": "bearer"} 
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.get("/me", response_model=UserResponse)
+async def get_current_user_info(current_user: User = Depends(get_current_user)):
+    """Get current user information"""
+    return UserResponse(
+        user_id=current_user.user_id,
+        username=current_user.username,
+        user_type=current_user.user_type
+    ) 
